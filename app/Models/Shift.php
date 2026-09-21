@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Database\Factories\ShiftFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Shift extends Model
+{
+    /** @use HasFactory<ShiftFactory> */
+    use HasFactory;
+
+    protected $fillable = [
+        'exam_stage_id',
+        'name',
+        'shift_date',
+        'start_time',
+        'end_time',
+        'status',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'shift_date' => 'date',
+        ];
+    }
+
+    public function examStage(): BelongsTo
+    {
+        return $this->belongsTo(ExamStage::class);
+    }
+
+    public function candidateSubmissions(): HasMany
+    {
+        return $this->hasMany(CandidateSubmission::class);
+    }
+}
