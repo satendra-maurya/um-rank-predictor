@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\NoticeFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Notice extends Model
 {
-    /** @use HasFactory<NoticeFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\VacancyFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Vacancy extends Model
 {
-    /** @use HasFactory<VacancyFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

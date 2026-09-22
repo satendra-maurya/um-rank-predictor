@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\CutoffFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Cutoff extends Model
 {
-    /** @use HasFactory<CutoffFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

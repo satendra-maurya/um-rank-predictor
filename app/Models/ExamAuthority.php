@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ExamAuthorityLevel;
-use Database\Factories\ExamAuthorityFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ExamAuthority extends Model
 {
-    /** @use HasFactory<ExamAuthorityFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

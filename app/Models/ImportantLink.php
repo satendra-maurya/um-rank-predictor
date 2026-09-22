@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\ImportantLinkFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ImportantLink extends Model
 {
-    /** @use HasFactory<ImportantLinkFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
-use Database\Factories\SubmissionRiskLogFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class SubmissionRiskLog extends Model
 {
-    /** @use HasFactory<SubmissionRiskLogFactory> */
+    use CrudTrait;
     use HasFactory;
 
     public $timestamps = false;

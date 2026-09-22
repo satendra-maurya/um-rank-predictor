@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SubmissionTrustStatus;
-use Database\Factories\CandidateSubmissionFactory;
+use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CandidateSubmission extends Model
 {
-    /** @use HasFactory<CandidateSubmissionFactory> */
+    use CrudTrait;
     use HasFactory;
 
     protected $fillable = [
