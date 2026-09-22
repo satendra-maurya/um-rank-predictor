@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class PredictionModel extends Model
             'total_marks' => 'decimal:2',
             'negative_marking_ratio' => 'decimal:2',
             'formula_config' => 'array',
+            'status' => ActiveStatus::class,
         ];
     }
 

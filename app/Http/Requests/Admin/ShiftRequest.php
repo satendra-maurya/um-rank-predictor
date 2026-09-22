@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ShiftRequest extends FormRequest
 {
@@ -19,7 +21,7 @@ class ShiftRequest extends FormRequest
             'shift_date' => 'required|date',
             'start_time' => 'nullable',
             'end_time' => 'nullable',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

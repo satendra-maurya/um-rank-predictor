@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ExamAuthorityRequest extends FormRequest
 {
@@ -21,7 +23,7 @@ class ExamAuthorityRequest extends FormRequest
             'state_id' => 'nullable|required_if:level,STATE|exists:states,id',
             'website_url' => 'nullable|url',
             'description' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

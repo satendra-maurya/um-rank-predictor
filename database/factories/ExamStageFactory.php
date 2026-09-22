@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\ExamCycle;
 use App\Models\ExamStage;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +26,7 @@ class ExamStageFactory extends Factory
             'stage_order' => fake()->numberBetween(1, 5),
             'type' => 'CBT',
             'description' => fake()->sentence(),
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

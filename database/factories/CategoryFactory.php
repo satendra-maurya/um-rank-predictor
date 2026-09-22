@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,7 +20,7 @@ class CategoryFactory extends Factory
             'code' => strtoupper(fake()->unique()->lexify('???')),
             'description' => fake()->sentence(),
             'sort_order' => fake()->numberBetween(1, 10),
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

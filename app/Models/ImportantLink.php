@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class ImportantLink extends Model
         return [
             'is_external' => 'boolean',
             'sort_order' => 'integer',
+            'status' => ActiveStatus::class,
         ];
     }
 

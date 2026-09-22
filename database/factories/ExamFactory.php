@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Exam;
 use App\Models\ExamAuthority;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -25,7 +26,7 @@ class ExamFactory extends Factory
             'slug' => Str::slug($name).'-'.fake()->unique()->numberBetween(100, 999),
             'description' => fake()->sentence(),
             'exam_type' => 'GRADUATION_LEVEL',
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

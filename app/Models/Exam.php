@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,13 @@ class Exam extends Model
         'exam_type',
         'status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => ActiveStatus::class,
+        ];
+    }
 
     public function examAuthority(): BelongsTo
     {

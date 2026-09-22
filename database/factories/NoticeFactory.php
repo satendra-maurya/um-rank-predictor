@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Exam;
 use App\Models\Notice;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -31,7 +32,7 @@ class NoticeFactory extends Factory
             'content' => fake()->paragraph(),
             'is_important' => fake()->boolean(),
             'published_at' => now(),
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

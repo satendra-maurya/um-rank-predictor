@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\PredictionModelRequest;
 use App\Models\PredictionModel;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -33,7 +34,7 @@ class PredictionModelCrudController extends CrudController
         $this->crud->column('name')->label('Model Name');
         $this->crud->column('version')->label('Version');
         $this->crud->column('algorithm_type')->label('Algorithm');
-        $this->crud->column('is_active')->label('Active')->type('boolean');
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
         $this->crud->column('published_at')->label('Published At')->type('datetime');
     }
 
@@ -46,7 +47,7 @@ class PredictionModelCrudController extends CrudController
         $this->crud->field('version')->label('Version (e.g. v1.0)')->type('text');
         $this->crud->field('algorithm_type')->label('Algorithm Type (e.g. RAW_RANK_PERCENTILE)')->type('text');
         $this->crud->field('config_json')->label('Configuration JSON')->type('textarea');
-        $this->crud->field('is_active')->label('Is Active')->type('checkbox');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
         $this->crud->field('published_at')->label('Published At')->type('datetime');
     }
 

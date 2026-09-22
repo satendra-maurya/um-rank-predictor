@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\State;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +19,7 @@ class StateFactory extends Factory
             'name' => fake()->state(),
             'short_name' => strtoupper(fake()->lexify('??')),
             'code' => strtoupper(fake()->unique()->lexify('??')),
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

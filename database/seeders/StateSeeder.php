@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatus;
 use App\Models\State;
 use Illuminate\Database\Seeder;
 
@@ -18,31 +19,31 @@ class StateSeeder extends Seeder
                 'name' => 'Uttar Pradesh',
                 'short_name' => 'UP',
                 'code' => 'UP',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Bihar',
                 'short_name' => 'BR',
                 'code' => 'BR',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Madhya Pradesh',
                 'short_name' => 'MP',
                 'code' => 'MP',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Rajasthan',
                 'short_name' => 'RJ',
                 'code' => 'RJ',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Delhi',
                 'short_name' => 'DL',
                 'code' => 'DL',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
         ];
 

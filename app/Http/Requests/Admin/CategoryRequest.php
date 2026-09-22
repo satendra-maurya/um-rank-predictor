@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
@@ -17,6 +19,7 @@ class CategoryRequest extends FormRequest
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:20',
             'description' => 'nullable|string',
+            'status' => ['nullable', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

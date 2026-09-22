@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\ExamStageRequest;
 use App\Models\ExamStage;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -34,10 +35,7 @@ class ExamStageCrudController extends CrudController
         $this->crud->column('stage_order')->label('Order');
         $this->crud->column('total_marks')->label('Total Marks');
         $this->crud->column('negative_marking_ratio')->label('Negative Ratio');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -52,10 +50,7 @@ class ExamStageCrudController extends CrudController
         $this->crud->field('duration_minutes')->label('Duration (Minutes)')->type('number');
         $this->crud->field('negative_marking_ratio')->label('Negative Marking Ratio (e.g. 0.25, 0.33)')->type('number')->attributes(['step' => '0.01']);
         $this->crud->field('description')->label('Description')->type('textarea');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

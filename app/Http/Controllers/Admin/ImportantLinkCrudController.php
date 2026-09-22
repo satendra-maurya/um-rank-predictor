@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\ImportantLinkRequest;
 use App\Models\ImportantLink;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -33,10 +34,7 @@ class ImportantLinkCrudController extends CrudController
         $this->crud->column('url')->label('URL');
         $this->crud->column('display_order')->label('Display Order');
         $this->crud->column('is_open_in_new_tab')->label('New Tab')->type('boolean');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -47,10 +45,7 @@ class ImportantLinkCrudController extends CrudController
         $this->crud->field('url')->label('URL')->type('url');
         $this->crud->field('display_order')->label('Display Order')->type('number')->default(0);
         $this->crud->field('is_open_in_new_tab')->label('Open in New Tab')->type('checkbox')->default(true);
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ImportantLinkRequest extends FormRequest
 {
@@ -18,7 +20,7 @@ class ImportantLinkRequest extends FormRequest
             'url' => 'required|url',
             'display_order' => 'required|integer|min:0',
             'is_open_in_new_tab' => 'required|boolean',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

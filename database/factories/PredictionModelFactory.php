@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\ExamStage;
 use App\Models\PredictionModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,7 +23,7 @@ class PredictionModelFactory extends Factory
             'total_marks' => 200.00,
             'negative_marking_ratio' => 0.25,
             'formula_config' => ['algorithm' => 'percentile_rank_v1'],
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use App\Enums\ExamAuthorityLevel;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ class ExamAuthority extends Model
     {
         return [
             'level' => ExamAuthorityLevel::class,
+            'status' => ActiveStatus::class,
         ];
     }
 

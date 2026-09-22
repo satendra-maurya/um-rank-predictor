@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\ExamStage;
 use App\Models\Shift;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -21,7 +22,7 @@ class ShiftFactory extends Factory
             'shift_date' => now()->addDays(5),
             'start_time' => '09:00:00',
             'end_time' => '11:00:00',
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

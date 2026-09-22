@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\NoticeRequest;
 use App\Models\Notice;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -32,11 +33,7 @@ class NoticeCrudController extends CrudController
         $this->crud->column('title')->label('Notice Title');
         $this->crud->column('notice_date')->label('Notice Date')->type('date');
         $this->crud->column('published_at')->label('Published At')->type('datetime');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'DRAFT' => 'warning',
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -49,11 +46,7 @@ class NoticeCrudController extends CrudController
         $this->crud->field('notice_date')->label('Notice Date')->type('date')->default(date('Y-m-d'));
         $this->crud->field('published_at')->label('Publish Date & Time')->type('datetime');
         $this->crud->field('link_url')->label('External Link URL')->type('url');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'DRAFT' => 'Draft',
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

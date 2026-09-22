@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatus;
 use App\Enums\ExamAuthorityLevel;
 use App\Models\ExamAuthority;
 use App\Models\State;
@@ -27,7 +28,7 @@ class ExamAuthoritySeeder extends Seeder
                 'website_url' => 'https://ssc.gov.in',
                 'logo' => null,
                 'description' => 'Recruitment authority for Group B and C non-technical posts in Central Ministries and Departments.',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Railway Recruitment Boards',
@@ -38,7 +39,7 @@ class ExamAuthoritySeeder extends Seeder
                 'website_url' => 'https://indianrailways.gov.in',
                 'logo' => null,
                 'description' => 'Recruitment board for technical and non-technical staff in Indian Railways.',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Uttar Pradesh Subordinate Services Selection Commission',
@@ -49,7 +50,7 @@ class ExamAuthoritySeeder extends Seeder
                 'website_url' => 'https://upsssc.gov.in',
                 'logo' => null,
                 'description' => 'State organization authorized to conduct examinations for appointments to Group C posts in Uttar Pradesh.',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
         ];
 

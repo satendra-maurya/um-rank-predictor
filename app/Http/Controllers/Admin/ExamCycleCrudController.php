@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ExamCycleStatus;
 use App\Http\Requests\Admin\ExamCycleRequest;
 use App\Models\ExamCycle;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -33,12 +34,7 @@ class ExamCycleCrudController extends CrudController
         $this->crud->column('title')->label('Cycle Title');
         $this->crud->column('year')->label('Year');
         $this->crud->column('exam_start_date')->label('Exam Start Date')->type('date');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'UPCOMING' => 'info',
-            'ONGOING' => 'success',
-            'COMPLETED' => 'secondary',
-            'ARCHIVED' => 'dark',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ExamCycleStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -54,12 +50,7 @@ class ExamCycleCrudController extends CrudController
         $this->crud->field('exam_start_date')->label('Exam Start Date')->type('date');
         $this->crud->field('exam_end_date')->label('Exam End Date')->type('date');
         $this->crud->field('result_date')->label('Result Date')->type('date');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'UPCOMING' => 'Upcoming',
-            'ONGOING' => 'Ongoing',
-            'COMPLETED' => 'Completed',
-            'ARCHIVED' => 'Archived',
-        ])->default('ONGOING');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ExamCycleStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Models\Exam;
 use App\Models\ImportantLink;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -24,7 +25,7 @@ class ImportantLinkFactory extends Factory
             'link_type' => 'APPLY_ONLINE',
             'is_external' => true,
             'sort_order' => 1,
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 }

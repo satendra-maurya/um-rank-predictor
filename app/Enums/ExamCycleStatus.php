@@ -2,12 +2,20 @@
 
 namespace App\Enums;
 
-enum ExamCycleStatus: string
+enum ExamCycleStatus: int
 {
-    case DRAFT = 'DRAFT';
-    case UPCOMING = 'UPCOMING';
-    case ACTIVE = 'ACTIVE';
-    case COMPLETED = 'COMPLETED';
-    case CANCELLED = 'CANCELLED';
-    case ARCHIVED = 'ARCHIVED';
+    case DRAFT = 0;
+    case ACTIVE = 1;
+    case COMPLETED = 2;
+    case CANCELLED = 3;
+
+    public function label(): string
+    {
+        return match ($this) {
+            self::DRAFT => 'Draft',
+            self::ACTIVE => 'Active',
+            self::COMPLETED => 'Completed',
+            self::CANCELLED => 'Cancelled',
+        };
+    }
 }

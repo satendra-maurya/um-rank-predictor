@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StateRequest extends FormRequest
 {
@@ -16,7 +18,7 @@ class StateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'code' => 'required|string|max:10',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

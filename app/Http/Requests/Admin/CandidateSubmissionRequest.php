@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\SubmissionTrustStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CandidateSubmissionRequest extends FormRequest
 {
@@ -14,7 +16,7 @@ class CandidateSubmissionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'trust_status' => 'required|in:TRUSTED,FLAGGED,BLOCKED',
+            'trust_status' => ['required', Rule::enum(SubmissionTrustStatus::class)],
             'risk_score' => 'required|integer|min:0',
         ];
     }

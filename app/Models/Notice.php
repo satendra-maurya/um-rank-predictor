@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ class Notice extends Model
             'notice_date' => 'date',
             'is_important' => 'boolean',
             'published_at' => 'datetime',
+            'status' => ActiveStatus::class,
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\SubmissionTrustStatus;
 use App\Http\Requests\Admin\CandidateSubmissionRequest;
 use App\Models\CandidateSubmission;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -31,11 +32,7 @@ class CandidateSubmissionCrudController extends CrudController
         $this->crud->column('gender')->label('Gender');
         $this->crud->column('raw_score')->label('Raw Score');
         $this->crud->column('risk_score')->label('Risk Score');
-        $this->crud->column('trust_status')->label('Trust Status')->type('badge')->options([
-            'TRUSTED' => 'success',
-            'FLAGGED' => 'warning',
-            'BLOCKED' => 'danger',
-        ]);
+        $this->crud->column('trust_status')->label('Trust Status')->type('enum')->enum_class(SubmissionTrustStatus::class)->enum_function('label');
         $this->crud->column('submitted_at')->label('Submitted At')->type('datetime');
     }
 
@@ -53,11 +50,7 @@ class CandidateSubmissionCrudController extends CrudController
         $this->crud->column('raw_score')->label('Calculated Raw Score');
         $this->crud->column('ip_address')->label('IP Address');
         $this->crud->column('risk_score')->label('Risk Score');
-        $this->crud->column('trust_status')->label('Trust Status')->type('badge')->options([
-            'TRUSTED' => 'success',
-            'FLAGGED' => 'warning',
-            'BLOCKED' => 'danger',
-        ]);
+        $this->crud->column('trust_status')->label('Trust Status')->type('enum')->enum_class(SubmissionTrustStatus::class)->enum_function('label');
         $this->crud->column('submitted_at')->label('Submitted At')->type('datetime');
     }
 
@@ -67,11 +60,7 @@ class CandidateSubmissionCrudController extends CrudController
 
         $this->crud->field('name')->label('Candidate Name')->type('text')->attributes(['disabled' => 'disabled']);
         $this->crud->field('raw_score')->label('Raw Score')->type('number')->attributes(['disabled' => 'disabled']);
-        $this->crud->field('trust_status')->label('Trust Status')->type('select_from_array')->options([
-            'TRUSTED' => 'Trusted',
-            'FLAGGED' => 'Flagged',
-            'BLOCKED' => 'Blocked',
-        ]);
+        $this->crud->field('trust_status')->label('Trust Status')->type('enum')->enum_class(SubmissionTrustStatus::class)->enum_function('label');
         $this->crud->field('risk_score')->label('Risk Score')->type('number');
     }
 }

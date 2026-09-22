@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ExamCycleStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ExamCycleRequest extends FormRequest
 {
@@ -23,7 +25,7 @@ class ExamCycleRequest extends FormRequest
             'exam_start_date' => 'nullable|date',
             'exam_end_date' => 'nullable|date|after_or_equal:exam_start_date',
             'result_date' => 'nullable|date',
-            'status' => 'required|in:UPCOMING,ONGOING,COMPLETED,ARCHIVED',
+            'status' => ['required', Rule::enum(ExamCycleStatus::class)],
         ];
     }
 }

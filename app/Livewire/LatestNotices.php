@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\ActiveStatus;
 use App\Models\Notice;
 use Livewire\Component;
 
@@ -12,7 +13,7 @@ class LatestNotices extends Component
     public function render()
     {
         $notices = Notice::with(['exam', 'examCycle'])
-            ->where('status', 'ACTIVE')
+            ->where('status', ActiveStatus::ACTIVE)
             ->orderBy('is_important', 'desc')
             ->orderBy('notice_date', 'desc')
             ->limit($this->limit)

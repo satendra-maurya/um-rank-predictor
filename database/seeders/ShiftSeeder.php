@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatus;
 use App\Models\ExamStage;
 use App\Models\Shift;
 use Illuminate\Database\Seeder;
@@ -14,7 +15,7 @@ class ShiftSeeder extends Seeder
      */
     public function run(): void
     {
-        $activeStages = ExamStage::where('status', 'ACTIVE')->get();
+        $activeStages = ExamStage::where('status', ActiveStatus::ACTIVE)->get();
         $staticDate = '2026-10-21';
 
         $shiftsTemplate = [
@@ -22,19 +23,19 @@ class ShiftSeeder extends Seeder
                 'name' => 'Shift 1 (09:00 AM - 10:00 AM)',
                 'start_time' => '09:00:00',
                 'end_time' => '10:00:00',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Shift 2 (12:30 PM - 01:30 PM)',
                 'start_time' => '12:30:00',
                 'end_time' => '13:30:00',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'name' => 'Shift 3 (04:00 PM - 05:00 PM)',
                 'start_time' => '16:00:00',
                 'end_time' => '17:00:00',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
         ];
 

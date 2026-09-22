@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ActiveStatus;
 use App\Models\Category;
 use App\Models\ExamStage;
 use App\Models\Notice;
@@ -31,7 +32,7 @@ class PublicFrontendTest extends TestCase
             'title' => 'SSC CGL Tier 1 Answer Key Released Notice',
             'slug' => 'ssc-cgl-tier-1-answer-key-released-notice',
             'content' => 'Official answer key content description.',
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ]);
 
         $responseList = $this->get('/notices');

@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class NoticeRequest extends FormRequest
 {
@@ -20,7 +22,7 @@ class NoticeRequest extends FormRequest
             'notice_date' => 'required|date',
             'published_at' => 'nullable|date',
             'link_url' => 'nullable|url',
-            'status' => 'required|in:DRAFT,ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

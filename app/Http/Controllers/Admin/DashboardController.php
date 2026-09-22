@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
+use App\Enums\ExamCycleStatus;
+use App\Enums\SubmissionTrustStatus;
 use App\Http\Controllers\Controller;
 use App\Models\CandidateSubmission;
 use App\Models\Exam;
@@ -21,13 +24,13 @@ class DashboardController extends Controller
                 trans('backpack::base.dashboard') => false,
             ],
             'totalExams' => Exam::count(),
-            'activeExams' => Exam::where('status', 'ACTIVE')->count(),
-            'activeExamCycles' => ExamCycle::where('status', 'ONGOING')->count(),
-            'activePredictionModels' => PredictionModel::where('status', 'ACTIVE')->count(),
+            'activeExams' => Exam::where('status', ActiveStatus::ACTIVE)->count(),
+            'activeExamCycles' => ExamCycle::where('status', ExamCycleStatus::ACTIVE)->count(),
+            'activePredictionModels' => PredictionModel::where('status', ActiveStatus::ACTIVE)->count(),
             'totalSubmissions' => CandidateSubmission::count(),
             'totalResults' => PredictionResult::count(),
-            'flaggedSubmissions' => CandidateSubmission::whereIn('trust_status', ['FLAGGED', 'BLOCKED'])->count(),
-            'activeNotices' => Notice::where('status', 'ACTIVE')->count(),
+            'flaggedSubmissions' => CandidateSubmission::whereIn('trust_status', [SubmissionTrustStatus::SUSPICIOUS, SubmissionTrustStatus::REJECTED])->count(),
+            'activeNotices' => Notice::where('status', ActiveStatus::ACTIVE)->count(),
         ];
 
         return view('admin.dashboard', $data);

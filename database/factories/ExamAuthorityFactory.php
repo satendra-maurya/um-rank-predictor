@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ActiveStatus;
 use App\Enums\ExamAuthorityLevel;
 use App\Models\ExamAuthority;
 use App\Models\State;
@@ -28,7 +29,7 @@ class ExamAuthorityFactory extends Factory
             'website_url' => fake()->url(),
             'logo' => null,
             'description' => fake()->sentence(),
-            'status' => 'ACTIVE',
+            'status' => ActiveStatus::ACTIVE,
         ];
     }
 

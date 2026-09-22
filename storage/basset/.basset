@@ -316,5 +316,11 @@
         "asset_path": "https://www.gravatar.com/avatar/12872d234106b23bc11e6d0a8facaaba2db52c1205b2b61f0826b57a0d9a720f.jpg?s=80&d=blank&r=g",
         "asset_disk_path": "basset/www.gravatar.com/avatar/12872d234106b23bc11e6d0a8facaaba2db52c1205b2b61f0826b57a0d9a720f.jpg",
         "asset_attributes": []
+    },
+    "tabler-menu-javascript.js": {
+        "asset_name": "tabler-menu-javascript.js",
+        "asset_path": "/Users/satendramaurya/Projects/um-rank-predictor/tabler-menu-javascript.js",
+        "asset_disk_path": "basset/tabler-menu-javascript-0a9427d9.js",
+        "asset_attributes": []
     }
 }

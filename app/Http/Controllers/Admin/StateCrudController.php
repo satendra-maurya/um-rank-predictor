@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\StateRequest;
 use App\Models\State;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -31,10 +32,7 @@ class StateCrudController extends CrudController
         $this->crud->column('id')->label('ID');
         $this->crud->column('name')->label('State Name');
         $this->crud->column('code')->label('Code');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
         $this->crud->column('created_at')->label('Created At');
     }
 
@@ -44,10 +42,7 @@ class StateCrudController extends CrudController
 
         $this->crud->field('name')->label('State Name')->type('text');
         $this->crud->field('code')->label('State Code (e.g. UP, BR)')->type('text');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

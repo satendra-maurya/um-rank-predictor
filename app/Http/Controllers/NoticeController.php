@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ActiveStatus;
 use App\Models\Notice;
 use Illuminate\Contracts\View\View;
 
@@ -10,7 +11,7 @@ class NoticeController extends Controller
     public function index(): View
     {
         $notices = Notice::with(['exam', 'examCycle', 'examStage'])
-            ->where('status', 'ACTIVE')
+            ->where('status', ActiveStatus::ACTIVE)
             ->orderBy('is_important', 'desc')
             ->orderBy('notice_date', 'desc')
             ->paginate(12);
@@ -23,9 +24,10 @@ class NoticeController extends Controller
     public function show(string $slug): View
     {
         $notice = Notice::with(['exam', 'examCycle', 'examStage'])
-            ->where('slug', $slug)
-            ->orWhere('id', $slug)
-            ->where('status', 'ACTIVE')
+            ->where(function ($query) use ($slug) {
+                $query->where('slug', $slug)->orWhere('id', $slug);
+            })
+            ->where('status', ActiveStatus::ACTIVE)
             ->firstOrFail();
 
         return view('notices.show', [

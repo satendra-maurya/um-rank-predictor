@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Enums\ActiveStatus;
+use App\Enums\ExamCycleStatus;
 use App\Models\Category;
 use App\Models\Exam;
 use App\Models\ExamAuthority;
@@ -117,7 +119,7 @@ class RankPredictor extends Component
 
         // Fetch active cycles
         $activeCycles = ExamCycle::where('exam_id', $examId)
-            ->whereIn('status', ['ACTIVE', 'UPCOMING', 'DRAFT'])
+            ->whereIn('status', [ExamCycleStatus::ACTIVE, ExamCycleStatus::DRAFT])
             ->orderBy('year', 'desc')
             ->get();
 
@@ -134,7 +136,7 @@ class RankPredictor extends Component
 
         // Fetch active stages for this cycle
         $stages = ExamStage::where('exam_cycle_id', $cycleId)
-            ->where('status', 'ACTIVE')
+            ->where('status', ActiveStatus::ACTIVE)
             ->orderBy('stage_order', 'asc')
             ->get();
 
@@ -152,7 +154,7 @@ class RankPredictor extends Component
 
         // Set default total questions if prediction model exists
         $model = PredictionModel::where('exam_stage_id', $stageId)
-            ->where('status', 'ACTIVE')
+            ->where('status', ActiveStatus::ACTIVE)
             ->first();
 
         if ($model) {
@@ -204,7 +206,7 @@ class RankPredictor extends Component
         }
 
         $model = PredictionModel::where('exam_stage_id', $this->selectedStageId)
-            ->where('status', 'ACTIVE')
+            ->where('status', ActiveStatus::ACTIVE)
             ->first();
 
         if (! $model) {
@@ -215,7 +217,7 @@ class RankPredictor extends Component
                     'name' => 'Default Prediction Engine',
                     'total_marks' => $this->total_questions * 1.0,
                     'negative_marking_ratio' => 0.25,
-                    'status' => 'ACTIVE',
+                    'status' => ActiveStatus::ACTIVE,
                 ]
             );
         }
@@ -246,7 +248,7 @@ class RankPredictor extends Component
     public function render()
     {
         // Dynamic options loading based on selections
-        $states = State::where('status', 'ACTIVE')->orderBy('name')->get();
+        $states = State::where('status', ActiveStatus::ACTIVE)->orderBy('name')->get();
 
         $authorities = collect();
         $exams = collect();
@@ -258,26 +260,26 @@ class RankPredictor extends Component
             $sscAuth = ExamAuthority::where('slug', 'ssc')->first();
             $authorities = $sscAuth ? collect([$sscAuth]) : ExamAuthority::where('level', 'CENTRAL')->get();
             $exams = Exam::whereIn('exam_authority_id', $authorities->pluck('id'))
-                ->where('status', 'ACTIVE')
+                ->where('status', ActiveStatus::ACTIVE)
                 ->orderBy('name')
                 ->get();
         } elseif ($this->selectedCategorySlug === 'railway') {
             $railwayAuth = ExamAuthority::where('slug', 'rrb')->first();
             $authorities = $railwayAuth ? collect([$railwayAuth]) : ExamAuthority::where('level', 'CENTRAL')->get();
             $exams = Exam::whereIn('exam_authority_id', $authorities->pluck('id'))
-                ->where('status', 'ACTIVE')
+                ->where('status', ActiveStatus::ACTIVE)
                 ->orderBy('name')
                 ->get();
         } elseif ($this->selectedCategorySlug === 'state-exams') {
             if ($this->selectedStateId) {
                 $authorities = ExamAuthority::where('state_id', $this->selectedStateId)
-                    ->where('status', 'ACTIVE')
+                    ->where('status', ActiveStatus::ACTIVE)
                     ->orderBy('name')
                     ->get();
             }
             if ($this->selectedAuthorityId) {
                 $exams = Exam::where('exam_authority_id', $this->selectedAuthorityId)
-                    ->where('status', 'ACTIVE')
+                    ->where('status', ActiveStatus::ACTIVE)
                     ->orderBy('name')
                     ->get();
             }
@@ -285,26 +287,26 @@ class RankPredictor extends Component
 
         if ($this->selectedExamId) {
             $cycles = ExamCycle::where('exam_id', $this->selectedExamId)
-                ->whereIn('status', ['ACTIVE', 'UPCOMING', 'DRAFT'])
+                ->whereIn('status', [ExamCycleStatus::ACTIVE, ExamCycleStatus::DRAFT])
                 ->orderBy('year', 'desc')
                 ->get();
         }
 
         if ($this->selectedCycleId) {
             $stages = ExamStage::where('exam_cycle_id', $this->selectedCycleId)
-                ->where('status', 'ACTIVE')
+                ->where('status', ActiveStatus::ACTIVE)
                 ->orderBy('stage_order', 'asc')
                 ->get();
         }
 
         if ($this->selectedStageId) {
             $shifts = Shift::where('exam_stage_id', $this->selectedStageId)
-                ->where('status', 'ACTIVE')
+                ->where('status', ActiveStatus::ACTIVE)
                 ->orderBy('shift_date')
                 ->get();
         }
 
-        $categories = Category::where('status', 'ACTIVE')->orderBy('sort_order')->get();
+        $categories = Category::where('status', ActiveStatus::ACTIVE)->orderBy('sort_order')->get();
 
         $selectedExam = $this->selectedExamId ? Exam::find($this->selectedExamId) : null;
         $selectedCycle = $this->selectedCycleId ? ExamCycle::find($this->selectedCycleId) : null;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ActiveStatus;
 use Backpack\CRUD\app\Models\Traits\CrudTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +19,13 @@ class State extends Model
         'code',
         'status',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'status' => ActiveStatus::class,
+        ];
+    }
 
     public function examAuthorities(): HasMany
     {

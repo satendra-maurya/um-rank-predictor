@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatus;
 use App\Models\Exam;
 use App\Models\ExamAuthority;
 use Illuminate\Database\Seeder;
@@ -27,7 +28,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'ssc-cgl',
                 'description' => 'Premier exam conducted for Group B & C posts across central government departments.',
                 'exam_type' => 'GRADUATION_LEVEL',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'authority_slug' => 'ssc',
@@ -36,7 +37,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'ssc-mts',
                 'description' => 'Recruitment exam for general Central Service Group C Non-Gazetted posts.',
                 'exam_type' => 'MATRIC',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'authority_slug' => 'ssc',
@@ -45,7 +46,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'ssc-chsl',
                 'description' => 'Recruitment for Lower Division Clerk, Junior Secretariat Assistant, and Data Entry Operator positions.',
                 'exam_type' => 'INTERMEDIATE',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'authority_slug' => 'ssc',
@@ -54,7 +55,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'ssc-cpo',
                 'description' => 'Recruitment exam for Sub-Inspector in Delhi Police and Central Armed Police Forces.',
                 'exam_type' => 'GRADUATION_LEVEL',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
 
             // Railway Exams
@@ -65,7 +66,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'rrb-ntpc',
                 'description' => 'Recruitment for Station Master, Goods Guard, Commercial Apprentice, and Clerk posts in Indian Railways.',
                 'exam_type' => 'GRADUATION_AND_INTERMEDIATE',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'authority_slug' => 'rrb',
@@ -74,7 +75,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'rrb-group-d',
                 'description' => 'Recruitment for Track Maintainer Grade IV, Helper/Assistant positions in Indian Railways.',
                 'exam_type' => 'MATRIC',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
 
             // State Exams (UPSSSC)
@@ -85,7 +86,7 @@ class ExamSeeder extends Seeder
                 'slug' => 'upsssc-pet',
                 'description' => 'Mandatory preliminary screening eligibility test for Group C posts in Uttar Pradesh.',
                 'exam_type' => 'ELIGIBILITY',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
         ];
 

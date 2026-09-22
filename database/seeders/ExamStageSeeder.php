@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ActiveStatus;
 use App\Models\Exam;
 use App\Models\ExamCycle;
 use App\Models\ExamStage;
@@ -24,7 +25,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'Computer Based Examination (Tier 1)',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'ssc-mts',
@@ -34,7 +35,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'Session 1 Examination (Numerical & Reasoning Ability)',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'ssc-chsl',
@@ -44,7 +45,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'Computer Based Examination (Tier 1)',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'ssc-cpo',
@@ -54,7 +55,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'Paper 1 Computer Based Examination',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'rrb-ntpc',
@@ -64,7 +65,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'First Stage Computer Based Test (CBT 1)',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'rrb-group-d',
@@ -74,7 +75,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'CBT',
                 'description' => 'Computer Based Test (CBT)',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
             [
                 'exam_slug' => 'upsssc-pet',
@@ -84,7 +85,7 @@ class ExamStageSeeder extends Seeder
                 'stage_order' => 1,
                 'type' => 'OFFLINE_OMR',
                 'description' => 'Preliminary Eligibility Test Written Examination',
-                'status' => 'ACTIVE',
+                'status' => ActiveStatus::ACTIVE,
             ],
         ];
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\ShiftRequest;
 use App\Models\Shift;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -34,10 +35,7 @@ class ShiftCrudController extends CrudController
         $this->crud->column('shift_date')->label('Shift Date')->type('date');
         $this->crud->column('start_time')->label('Start Time');
         $this->crud->column('end_time')->label('End Time');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -49,10 +47,7 @@ class ShiftCrudController extends CrudController
         $this->crud->field('shift_date')->label('Shift Date')->type('date');
         $this->crud->field('start_time')->label('Start Time')->type('time');
         $this->crud->field('end_time')->label('End Time')->type('time');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void

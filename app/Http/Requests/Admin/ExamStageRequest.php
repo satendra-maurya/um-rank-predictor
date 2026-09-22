@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests\Admin;
 
+use App\Enums\ActiveStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ExamStageRequest extends FormRequest
 {
@@ -22,7 +24,7 @@ class ExamStageRequest extends FormRequest
             'duration_minutes' => 'nullable|integer|min:1',
             'negative_marking_ratio' => 'nullable|numeric|min:0|max:1',
             'description' => 'nullable|string',
-            'status' => 'required|in:ACTIVE,INACTIVE',
+            'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }
 }

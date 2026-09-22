@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ActiveStatus;
 use App\Http\Requests\Admin\ExamRequest;
 use App\Models\Exam;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -32,10 +33,7 @@ class ExamCrudController extends CrudController
         $this->crud->column('name')->label('Exam Name');
         $this->crud->column('code')->label('Code');
         $this->crud->column('exam_authority_id')->label('Exam Authority')->type('relationship')->attribute('name');
-        $this->crud->column('status')->label('Status')->type('badge')->options([
-            'ACTIVE' => 'success',
-            'INACTIVE' => 'danger',
-        ]);
+        $this->crud->column('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupCreateOperation(): void
@@ -47,10 +45,7 @@ class ExamCrudController extends CrudController
         $this->crud->field('code')->label('Exam Code (e.g. CGL, NTPC)')->type('text');
         $this->crud->field('exam_authority_id')->label('Exam Authority')->type('select')->entity('examAuthority')->attribute('name');
         $this->crud->field('description')->label('Description')->type('textarea');
-        $this->crud->field('status')->label('Status')->type('select_from_array')->options([
-            'ACTIVE' => 'Active',
-            'INACTIVE' => 'Inactive',
-        ])->default('ACTIVE');
+        $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 
     protected function setupUpdateOperation(): void
