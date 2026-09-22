@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 // Public Homepage & Predictor Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/rank-predictor/{authority}/available-exams', [HomeController::class, 'availableExams'])->name('rank-predictor.authority.available-exams');
 
 // Rank Predictor Flow Routes (supporting optional category / exam / year / stage parameters)
 Route::get('/rank-predictor/{category?}/{exam?}/{year?}/{stage?}', RankPredictor::class)->name('rank-predictor');
