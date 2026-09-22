@@ -25,7 +25,7 @@ class ExamAuthorityCrudController extends CrudController
     {
         $this->crud->setModel(ExamAuthority::class);
         $this->crud->setRoute(
-            config('backpack.base.route_prefix', 'admin') . '/exam-authority'
+            config('backpack.base.route_prefix', 'admin').'/exam-authority'
         );
         $this->crud->setEntityNameStrings(
             'exam authority',
@@ -47,8 +47,7 @@ class ExamAuthorityCrudController extends CrudController
         $this->crud->column('level')
             ->label('Level')
             ->type('enum')
-            ->enum_class(ExamAuthorityLevel::class)
-            ->enum_function('label');
+            ->enum_class(ExamAuthorityLevel::class);
 
         $this->crud->column('state_id')
             ->label('State')
@@ -81,8 +80,7 @@ class ExamAuthorityCrudController extends CrudController
         $this->crud->field('level')
             ->label('Authority Level')
             ->type('enum')
-            ->enum_class(ExamAuthorityLevel::class)
-            ->enum_function('label');
+            ->enum_class(ExamAuthorityLevel::class);
 
         $this->crud->field('state_id')
             ->label('State (if State Level)')
