@@ -17,12 +17,14 @@ class PublicFrontendTest extends TestCase
 
     public function test_homepage_loads_successfully_without_admin_login(): void
     {
+        $this->seed(DatabaseSeeder::class);
+
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('UM RANK PREDICTOR');
+        $response->assertSee('Rank Predictor');
         $response->assertSeeText('Know Your Expected Rank Before You Compete');
-        $response->assertSeeText('Check Your Rank Now');
+        $response->assertSeeText('Check Your Rank');
         $response->assertDontSeeText('Admin Login');
     }
 
@@ -52,7 +54,7 @@ class PublicFrontendTest extends TestCase
             ->assertSee('Select Your Exam Category')
             ->call('selectCategory', 'ssc')
             ->assertSet('step', 2)
-            ->assertSee('SSC Combined Graduate Level')
+            ->assertSee('SSC CGL')
             ->call('selectCategory', 'state-exams')
             ->assertSet('step', 2)
             ->assertSee('Select State');
@@ -79,7 +81,33 @@ class PublicFrontendTest extends TestCase
             ->set('incorrect_answers', 20)
             ->call('submitPrediction')
             ->assertSet('step', 6)
-            ->assertSee('Your Rank Prediction')
+            ->assertSee('Your Estimated Rank')
             ->assertSee('Rohan Sharma');
+    }
+
+    public function test_home_page_displays_database_driven_exam_authorities(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Staff Selection Commission');
+        $response->assertSee('/rank-predictor/ssc/available-exams');
+    }
+
+    public function test_available_exams_page_loads_exams_for_authority(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        $response = $this->get('/rank-predictor/ssc/available-exams');
+        $response->assertStatus(200);
+        $response->assertSee('SSC Exams');
+        $response->assertSee('SSC CGL');
+    }
+
+    public function test_available_exams_page_returns_404_for_invalid_authority(): void
+    {
+        $response = $this->get('/rank-predictor/non-existent-authority/available-exams');
+        $response->assertStatus(404);
     }
 }

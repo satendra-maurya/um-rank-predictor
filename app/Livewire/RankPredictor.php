@@ -14,8 +14,10 @@ use App\Models\PredictionResult;
 use App\Models\Shift;
 use App\Models\State;
 use App\Services\PredictionService;
+use Livewire\Attributes\Layout;
 use Livewire\Component;
 
+#[Layout('components.layouts.app')]
 class RankPredictor extends Component
 {
     // Step indicator: 1 = Main Category (SSC/Railway/State), 2 = State/Authority/Exam, 3 = Cycle, 4 = Stage, 5 = Prediction Form, 6 = Result
