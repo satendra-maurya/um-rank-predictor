@@ -7,6 +7,7 @@ use App\Models\CandidateSubmission;
 use App\Models\PredictionModel;
 use App\Models\PredictionResult;
 use App\Models\SubmissionRiskLog;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PredictionService
@@ -59,41 +60,58 @@ class PredictionService
             $riskFactors[] = ['factor' => 'HIGH_VELOCITY_IP', 'weight' => 50, 'details' => ['recent_count' => $recentSubmissionsCount]];
         }
 
-        $candidateIdentifier = trim($data['candidate_identifier'] ?? $data['roll_number'] ?? $data['name'] ?? '');
+        $candidateName = trim($data['candidate_name'] ?? $data['name'] ?? '');
+        $candidateIdentifier = trim($data['candidate_identifier'] ?? $data['roll_number'] ?? '');
         $dob = ! empty($data['dob']) ? $data['dob'] : null;
 
-        // 3. Create Submission Record
-        $submission = CandidateSubmission::create([
-            'prediction_model_id' => $model->id,
-            'exam_stage_id' => $data['exam_stage_id'],
-            'shift_id' => $data['shift_id'] ?? null,
-            'category_id' => $data['category_id'] ?? null,
-            'candidate_identifier' => $candidateIdentifier,
-            'dob' => $dob,
-            'total_attempted' => isset($data['total_attempted']) ? (int) $data['total_attempted'] : null,
-            'correct_answers' => isset($data['correct_answers']) ? (int) $data['correct_answers'] : null,
-            'incorrect_answers' => isset($data['incorrect_answers']) ? (int) $data['incorrect_answers'] : null,
-            'raw_score' => $rawScore,
-            'normalized_score' => $rawScore,
-            'session_token' => $sessionToken,
-            'ip_hash' => $ipHash,
-            'user_agent_hash' => $uaHash,
-            'device_fingerprint' => $deviceFingerprint,
-            'risk_score' => $riskScore,
-            'trust_status' => $trustStatus,
-            'submitted_at' => now(),
-        ]);
-
-        // Record risk logs if any
-        foreach ($riskFactors as $rf) {
-            SubmissionRiskLog::create([
-                'candidate_submission_id' => $submission->id,
-                'risk_factor' => $rf['factor'],
-                'risk_weight' => $rf['weight'],
-                'details' => $rf['details'],
-                'created_at' => now(),
+        // 3. Create Submission & Record Consent in Transaction
+        $submission = DB::transaction(function () use ($model, $data, $rawScore, $ipHash, $uaHash, $sessionToken, $deviceFingerprint, $riskScore, $trustStatus, $riskFactors, $candidateName, $candidateIdentifier, $dob) {
+            // Record Purpose Consent for Rank Prediction
+            app(ConsentService::class)->give('rank_prediction', [
+                'user_id' => auth()->id(),
+                'session_token' => $sessionToken,
+                'ip_address' => $data['ip_address'] ?? null,
+                'user_agent' => $data['user_agent'] ?? null,
+                'source' => 'rank_predictor_submission',
+                'metadata' => [
+                    'exam_stage_id' => $data['exam_stage_id'],
+                ],
             ]);
-        }
+
+            $sub = CandidateSubmission::create([
+                'prediction_model_id' => $model->id,
+                'exam_stage_id' => $data['exam_stage_id'],
+                'shift_id' => $data['shift_id'] ?? null,
+                'category_id' => $data['category_id'] ?? null,
+                'candidate_name' => $candidateName ?: null,
+                'candidate_identifier' => $candidateIdentifier,
+                'dob' => $dob,
+                'total_attempted' => isset($data['total_attempted']) ? (int) $data['total_attempted'] : null,
+                'correct_answers' => isset($data['correct_answers']) ? (int) $data['correct_answers'] : null,
+                'incorrect_answers' => isset($data['incorrect_answers']) ? (int) $data['incorrect_answers'] : null,
+                'raw_score' => $rawScore,
+                'normalized_score' => $rawScore,
+                'session_token' => $sessionToken,
+                'ip_hash' => $ipHash,
+                'user_agent_hash' => $uaHash,
+                'device_fingerprint' => $deviceFingerprint,
+                'risk_score' => $riskScore,
+                'trust_status' => $trustStatus,
+                'submitted_at' => now(),
+            ]);
+
+            foreach ($riskFactors as $rf) {
+                SubmissionRiskLog::create([
+                    'candidate_submission_id' => $sub->id,
+                    'risk_factor' => $rf['factor'],
+                    'risk_weight' => $rf['weight'],
+                    'details' => $rf['details'],
+                    'created_at' => now(),
+                ]);
+            }
+
+            return $sub;
+        });
 
         // 4. Calculate Ranks against Trusted Dataset for the Exam Stage
         $trustedBaseQuery = CandidateSubmission::where('exam_stage_id', $data['exam_stage_id'])
@@ -141,7 +159,7 @@ class PredictionService
             'percentile' => $percentile,
             'confidence_score' => 95.00,
             'metadata' => [
-                'candidate_name' => $candidateIdentifier,
+                'candidate_name' => $candidateName ?: $candidateIdentifier,
                 'gender' => $gender,
                 'predicted_rank_gender' => $rankGender,
                 'total_crowd_samples' => $totalTrustedCount,

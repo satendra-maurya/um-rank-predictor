@@ -21,6 +21,7 @@ class CandidateSubmission extends Model
         'shift_id',
         'category_id',
         'user_id',
+        'candidate_name',
         'candidate_identifier',
         'dob',
         'total_attempted',

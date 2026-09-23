@@ -16,7 +16,9 @@ Route::get('/rank-predictor/{category?}/{exam?}/{year?}/{stage?}', RankPredictor
 Route::get('/notices', [NoticeController::class, 'index'])->name('notices.index');
 Route::get('/notices/{slug}', [NoticeController::class, 'show'])->name('notices.show');
 
-// Informational Pages
+// Informational & Legal Pages
 Route::get('/how-it-works', [HomeController::class, 'howItWorks'])->name('how-it-works');
 Route::get('/about', [HomeController::class, 'about'])->name('about');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+Route::get('/privacy-policy', [HomeController::class, 'privacyPolicy'])->name('privacy-policy');
+Route::get('/privacy-notice', [HomeController::class, 'privacyNotice'])->name('privacy-notice');

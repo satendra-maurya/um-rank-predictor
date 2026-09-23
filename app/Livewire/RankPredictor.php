@@ -37,6 +37,8 @@ class RankPredictor extends Component
     public ?int $selectedStageId = null;
 
     // Form Fields
+    public string $name = '';
+
     public string $roll_number = '';
 
     public ?string $dob = null;
@@ -48,6 +50,8 @@ class RankPredictor extends Component
     public string $gender = 'Male';
 
     public ?int $shift_id = null;
+
+    public bool $consent = false;
 
     // Submitting state flag & Result
     public bool $isAnalyzing = false;
@@ -183,9 +187,11 @@ class RankPredictor extends Component
         $this->selectedExamId = null;
         $this->selectedCycleId = null;
         $this->selectedStageId = null;
+        $this->name = '';
         $this->roll_number = '';
         $this->dob = null;
         $this->raw_score = null;
+        $this->consent = false;
         $this->predictionResult = null;
         $this->isAnalyzing = false;
     }
@@ -193,12 +199,15 @@ class RankPredictor extends Component
     public function submitPrediction(PredictionService $service): void
     {
         $this->validate([
+            'name' => 'required|string|min:2|max:191',
             'roll_number' => 'required|string|min:2|max:191',
             'dob' => 'required|date|before_or_equal:today',
             'raw_score' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'gender' => 'required|in:Male,Female,Other',
-            'shift_id' => 'nullable|exists:shifts,id',
+            'consent' => 'required|accepted',
+        ], [
+            'consent.accepted' => 'You must agree to the data processing consent to calculate your rank.',
         ]);
 
         $model = PredictionModel::where('exam_stage_id', $this->selectedStageId)
@@ -225,6 +234,8 @@ class RankPredictor extends Component
             'exam_stage_id' => $this->selectedStageId,
             'shift_id' => $this->shift_id,
             'category_id' => $this->category_id,
+            'name' => $this->name,
+            'candidate_name' => $this->name,
             'candidate_identifier' => $this->roll_number,
             'dob' => $this->dob,
             'gender' => $this->gender,

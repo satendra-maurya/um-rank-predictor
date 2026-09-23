@@ -34,7 +34,10 @@ class DatabaseSeeder extends Seeder
             // 7. Shifts (Depends on Exam Stages)
             $this->call(ShiftSeeder::class);
 
-            // 8. Admin User
+            // 8. Consent Purposes
+            $this->call(ConsentPurposeSeeder::class);
+
+            // 9. Admin User
             $this->call(AdminUserSeeder::class);
         });
     }

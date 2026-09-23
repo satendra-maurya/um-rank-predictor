@@ -317,6 +317,12 @@
                     <div class="form-grid">
 
                         <div class="field">
+                            <label for="pred_name">Candidate Name <span style="color:var(--danger);">*</span></label>
+                            <input type="text" id="pred_name" wire:model="name" placeholder="e.g. Rahul Kumar">
+                            @error('name') <span class="error" style="display:block;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="field">
                             <label for="pred_roll">Roll Number <span style="color:var(--danger);">*</span></label>
                             <input type="text" id="pred_roll" wire:model="roll_number" placeholder="e.g. 2201004589">
                             @error('roll_number') <span class="error" style="display:block;">{{ $message }}</span> @enderror
@@ -326,12 +332,6 @@
                             <label for="pred_dob">Date of Birth <span style="color:var(--danger);">*</span></label>
                             <input type="date" id="pred_dob" wire:model="dob">
                             @error('dob') <span class="error" style="display:block;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="field full">
-                            <label for="pred_score">Marks Obtained <span style="color:var(--danger);">*</span></label>
-                            <input type="number" step="0.01" id="pred_score" wire:model="raw_score" placeholder="e.g. 142.50">
-                            @error('raw_score') <span class="error" style="display:block;">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="field">
@@ -344,7 +344,12 @@
                             </select>
                             @error('category_id') <span class="error" style="display:block;">{{ $message }}</span> @enderror
                         </div>
-
+                        
+                        <div class="field">
+                            <label for="pred_score">Marks Obtained <span style="color:var(--danger);">*</span></label>
+                            <input type="number" step="0.01" id="pred_score" wire:model="raw_score" placeholder="e.g. 142.50">
+                            @error('raw_score') <span class="error" style="display:block;">{{ $message }}</span> @enderror
+                        </div>
                         <div class="field">
                             <label for="pred_gender">Gender <span style="color:var(--danger);">*</span></label>
                             <select id="pred_gender" wire:model="gender">
@@ -355,19 +360,9 @@
                             @error('gender') <span class="error" style="display:block;">{{ $message }}</span> @enderror
                         </div>
 
-                        @if($shifts->isNotEmpty())
-                            <div class="field full">
-                                <label for="pred_shift">Exam Shift (Optional)</label>
-                                <select id="pred_shift" wire:model="shift_id">
-                                    <option value="">-- Select Shift if applicable --</option>
-                                    @foreach($shifts as $sh)
-                                        <option value="{{ $sh->id }}">{{ $sh->name }} ({{ $sh->shift_date->format('d M Y') }})</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        @endif
-
                     </div>
+
+                    <x-consent purpose="rank_prediction" :required="true" wireModel="consent" />
 
                     <div class="form-actions">
                         <button type="submit" wire:loading.attr="disabled" class="btn btn-gold" style="min-width:260px;">
@@ -400,6 +395,10 @@
                     <div class="rsub">out of {{ number_format($predictionResult->metadata['total_crowd_samples'] ?? 0) }} candidates considered</div>
 
                     <div class="result-meta-grid">
+                        <div class="result-meta">
+                            <div class="k">Candidate Name</div>
+                            <div class="v">{{ $predictionResult->candidateSubmission?->candidate_name ?? $predictionResult->metadata['candidate_name'] ?? $name }}</div>
+                        </div>
                         <div class="result-meta">
                             <div class="k">Roll Number</div>
                             <div class="v">{{ $predictionResult->candidateSubmission?->candidate_identifier ?? $roll_number }}</div>
