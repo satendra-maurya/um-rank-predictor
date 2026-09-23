@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\ActiveStatus;
 use App\Models\ExamAuthority;
+use App\Models\ImportantLink;
+use App\Models\Notice;
 use Illuminate\Contracts\View\View;
 
 class HomeController extends Controller
@@ -11,8 +13,10 @@ class HomeController extends Controller
     public function index(): View
     {
         $authorities = ExamAuthority::where('status', '!=', ActiveStatus::INACTIVE)->get();
+        $hasNotices = Notice::where('status', ActiveStatus::ACTIVE)->exists();
+        $hasImportantLinks = ImportantLink::where('status', ActiveStatus::ACTIVE)->exists();
 
-        return view('home', compact('authorities'));
+        return view('home', compact('authorities', 'hasNotices', 'hasImportantLinks'));
     }
 
     public function availableExams(string $authoritySlug): View

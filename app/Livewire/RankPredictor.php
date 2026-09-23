@@ -37,17 +37,15 @@ class RankPredictor extends Component
     public ?int $selectedStageId = null;
 
     // Form Fields
-    public string $name = '';
+    public string $roll_number = '';
+
+    public ?string $dob = null;
+
+    public ?float $raw_score = null;
 
     public ?int $category_id = null;
 
     public string $gender = 'Male';
-
-    public ?int $total_questions = 100;
-
-    public ?int $correct_answers = 75;
-
-    public ?int $incorrect_answers = 25;
 
     public ?int $shift_id = null;
 
@@ -185,6 +183,9 @@ class RankPredictor extends Component
         $this->selectedExamId = null;
         $this->selectedCycleId = null;
         $this->selectedStageId = null;
+        $this->roll_number = '';
+        $this->dob = null;
+        $this->raw_score = null;
         $this->predictionResult = null;
         $this->isAnalyzing = false;
     }
@@ -192,20 +193,13 @@ class RankPredictor extends Component
     public function submitPrediction(PredictionService $service): void
     {
         $this->validate([
-            'name' => 'required|string|min:2|max:100',
+            'roll_number' => 'required|string|min:2|max:191',
+            'dob' => 'required|date|before_or_equal:today',
+            'raw_score' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'gender' => 'required|in:Male,Female,Other',
-            'total_questions' => 'required|integer|min:1|max:1000',
-            'correct_answers' => 'required|integer|min:0',
-            'incorrect_answers' => 'required|integer|min:0',
             'shift_id' => 'nullable|exists:shifts,id',
         ]);
-
-        if (($this->correct_answers + $this->incorrect_answers) > $this->total_questions) {
-            $this->addError('correct_answers', 'Correct + Incorrect answers cannot exceed total questions ('.$this->total_questions.').');
-
-            return;
-        }
 
         $model = PredictionModel::where('exam_stage_id', $this->selectedStageId)
             ->where('status', ActiveStatus::ACTIVE)
@@ -217,7 +211,7 @@ class RankPredictor extends Component
                 ['exam_stage_id' => $this->selectedStageId, 'version' => 'v1.0'],
                 [
                     'name' => 'Default Prediction Engine',
-                    'total_marks' => $this->total_questions * 1.0,
+                    'total_marks' => 200.0,
                     'negative_marking_ratio' => 0.25,
                     'status' => ActiveStatus::ACTIVE,
                 ]
@@ -231,11 +225,10 @@ class RankPredictor extends Component
             'exam_stage_id' => $this->selectedStageId,
             'shift_id' => $this->shift_id,
             'category_id' => $this->category_id,
-            'name' => $this->name,
+            'candidate_identifier' => $this->roll_number,
+            'dob' => $this->dob,
             'gender' => $this->gender,
-            'total_questions' => $this->total_questions,
-            'correct_answers' => $this->correct_answers,
-            'incorrect_answers' => $this->incorrect_answers,
+            'raw_score' => $this->raw_score,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
             'session_token' => session()->getId(),

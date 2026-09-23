@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Enums\ActiveStatus;
 use App\Models\Category;
 use App\Models\ExamStage;
+use App\Models\ImportantLink;
 use App\Models\Notice;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -72,17 +73,15 @@ class PublicFrontendTest extends TestCase
             ->set('selectedExamId', $cglStage->examCycle->exam_id)
             ->set('selectedCycleId', $cglStage->exam_cycle_id)
             ->set('selectedStageId', $cglStage->id)
-            ->set('step', 5)
-            ->set('name', 'Rohan Sharma')
+            ->set('roll_number', '2201004589')
+            ->set('dob', '2000-05-15')
+            ->set('raw_score', 145.50)
             ->set('category_id', $category->id)
             ->set('gender', 'Male')
-            ->set('total_questions', 100)
-            ->set('correct_answers', 75)
-            ->set('incorrect_answers', 20)
             ->call('submitPrediction')
             ->assertSet('step', 6)
             ->assertSee('Your Estimated Rank')
-            ->assertSee('Rohan Sharma');
+            ->assertSee('2201004589');
     }
 
     public function test_home_page_displays_database_driven_exam_authorities(): void
@@ -109,5 +108,69 @@ class PublicFrontendTest extends TestCase
     {
         $response = $this->get('/rank-predictor/non-existent-authority/available-exams');
         $response->assertStatus(404);
+    }
+
+    public function test_homepage_hides_notices_and_links_when_no_records_exist(): void
+    {
+        Notice::query()->delete();
+        ImportantLink::query()->delete();
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Select Your Exam');
+        $response->assertDontSee('Latest Updates & Notices');
+        $response->assertDontSee('Important Direct Links');
+        $response->assertDontSee('No official notices published yet.');
+        $response->assertDontSee('No links configured.');
+    }
+
+    public function test_homepage_shows_only_notices_when_links_do_not_exist(): void
+    {
+        ImportantLink::query()->delete();
+        Notice::factory()->create([
+            'title' => 'Test Notice Entry',
+            'status' => ActiveStatus::ACTIVE,
+        ]);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Select Your Exam');
+        $response->assertSee('Latest Updates & Notices');
+        $response->assertDontSee('Important Direct Links');
+    }
+
+    public function test_homepage_shows_only_links_when_notices_do_not_exist(): void
+    {
+        Notice::query()->delete();
+        ImportantLink::factory()->create([
+            'title' => 'Test Direct Link',
+            'url' => 'https://example.com',
+            'status' => ActiveStatus::ACTIVE,
+        ]);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Select Your Exam');
+        $response->assertDontSee('Latest Updates & Notices');
+        $response->assertSee('Important Direct Links');
+    }
+
+    public function test_homepage_shows_both_sections_when_both_exist(): void
+    {
+        Notice::factory()->create([
+            'title' => 'Test Notice Entry',
+            'status' => ActiveStatus::ACTIVE,
+        ]);
+        ImportantLink::factory()->create([
+            'title' => 'Test Direct Link',
+            'url' => 'https://example.com',
+            'status' => ActiveStatus::ACTIVE,
+        ]);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('Select Your Exam');
+        $response->assertSee('Latest Updates & Notices');
+        $response->assertSee('Important Direct Links');
     }
 }

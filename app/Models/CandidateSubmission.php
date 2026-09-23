@@ -22,6 +22,7 @@ class CandidateSubmission extends Model
         'category_id',
         'user_id',
         'candidate_identifier',
+        'dob',
         'total_attempted',
         'correct_answers',
         'incorrect_answers',
@@ -39,6 +40,7 @@ class CandidateSubmission extends Model
     protected function casts(): array
     {
         return [
+            'dob' => 'date',
             'total_attempted' => 'integer',
             'correct_answers' => 'integer',
             'incorrect_answers' => 'integer',

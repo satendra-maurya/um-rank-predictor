@@ -811,10 +811,20 @@ footer {
     color: #fff;
 }
 
+.info-widgets-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+}
+.info-widgets-grid.single {
+    grid-template-columns: 1fr;
+}
+
 /* =====================================================================
    Responsive
    ===================================================================== */
 @media (max-width: 900px) {
+    .info-widgets-grid { grid-template-columns: 1fr; }
     .strip-grid  { grid-template-columns: repeat(3, 1fr); }
     .exam-grid   { grid-template-columns: repeat(2, 1fr); }
     .steps       { grid-template-columns: repeat(2, 1fr); }

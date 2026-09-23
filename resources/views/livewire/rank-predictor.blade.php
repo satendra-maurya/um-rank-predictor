@@ -316,10 +316,22 @@
                 <form wire:submit.prevent="submitPrediction">
                     <div class="form-grid">
 
+                        <div class="field">
+                            <label for="pred_roll">Roll Number <span style="color:var(--danger);">*</span></label>
+                            <input type="text" id="pred_roll" wire:model="roll_number" placeholder="e.g. 2201004589">
+                            @error('roll_number') <span class="error" style="display:block;">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="field">
+                            <label for="pred_dob">Date of Birth <span style="color:var(--danger);">*</span></label>
+                            <input type="date" id="pred_dob" wire:model="dob">
+                            @error('dob') <span class="error" style="display:block;">{{ $message }}</span> @enderror
+                        </div>
+
                         <div class="field full">
-                            <label for="pred_name">Candidate Name <span style="color:var(--danger);">*</span></label>
-                            <input type="text" id="pred_name" wire:model="name" placeholder="e.g. Rahul Kumar">
-                            @error('name') <span class="error" style="display:block;">{{ $message }}</span> @enderror
+                            <label for="pred_score">Marks Obtained <span style="color:var(--danger);">*</span></label>
+                            <input type="number" step="0.01" id="pred_score" wire:model="raw_score" placeholder="e.g. 142.50">
+                            @error('raw_score') <span class="error" style="display:block;">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="field">
@@ -341,25 +353,6 @@
                                 <option value="Other">Other</option>
                             </select>
                             @error('gender') <span class="error" style="display:block;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="field">
-                            <label for="pred_total">Total Questions <span style="color:var(--danger);">*</span></label>
-                            <input type="number" id="pred_total" wire:model="total_questions" min="1" max="1000">
-                            @error('total_questions') <span class="error" style="display:block;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="field">
-                            <label for="pred_correct">Correct Answers <span style="color:var(--danger);">*</span></label>
-                            <input type="number" id="pred_correct" wire:model="correct_answers" min="0">
-                            @error('correct_answers') <span class="error" style="display:block;">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="field">
-                            <label for="pred_incorrect">Incorrect Answers <span style="color:var(--danger);">*</span></label>
-                            <input type="number" id="pred_incorrect" wire:model="incorrect_answers" min="0">
-                            <span class="hint">Used for negative marking calculation.</span>
-                            @error('incorrect_answers') <span class="error" style="display:block;">{{ $message }}</span> @enderror
                         </div>
 
                         @if($shifts->isNotEmpty())
@@ -408,12 +401,16 @@
 
                     <div class="result-meta-grid">
                         <div class="result-meta">
-                            <div class="k">Candidate</div>
-                            <div class="v">{{ $predictionResult->metadata['candidate_name'] ?? $name }}</div>
+                            <div class="k">Roll Number</div>
+                            <div class="v">{{ $predictionResult->candidateSubmission?->candidate_identifier ?? $roll_number }}</div>
                         </div>
                         <div class="result-meta">
-                            <div class="k">Raw Score</div>
+                            <div class="k">Marks Obtained</div>
                             <div class="v">{{ number_format($predictionResult->candidateSubmission?->raw_score ?? 0, 2) }}</div>
+                        </div>
+                        <div class="result-meta">
+                            <div class="k">Date of Birth</div>
+                            <div class="v">{{ $predictionResult->candidateSubmission?->dob?->format('d M Y') ?? '—' }}</div>
                         </div>
                         <div class="result-meta">
                             <div class="k">Category</div>

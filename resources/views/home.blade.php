@@ -110,18 +110,6 @@
     </section>
 
     {{-- ============================================================
-         LATEST NOTICES & IMPORTANT LINKS (from Livewire widgets)
-         ============================================================ --}}
-    <section class="section" style="padding-top:0;background:var(--bg);">
-        <div class="container">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;">
-                @livewire('latest-notices', ['limit' => 5])
-                @livewire('important-links-widget')
-            </div>
-        </div>
-    </section>
-
-    {{-- ============================================================
          SELECT YOUR EXAM
          ============================================================ --}}
     <section class="section" id="examsSection">
@@ -181,6 +169,24 @@
             </div>
         </div>
     </section>
+
+    {{-- ============================================================
+         LATEST NOTICES & IMPORTANT LINKS (from Livewire widgets)
+         ============================================================ --}}
+    @if($hasNotices || $hasImportantLinks)
+        <section class="section" style="padding-top:0;background:var(--bg);">
+            <div class="container">
+                <div class="info-widgets-grid {{ (!$hasNotices || !$hasImportantLinks) ? 'single' : '' }}">
+                    @if($hasNotices)
+                        @livewire('latest-notices', ['limit' => 5])
+                    @endif
+                    @if($hasImportantLinks)
+                        @livewire('important-links-widget')
+                    @endif
+                </div>
+            </div>
+        </section>
+    @endif
 
     {{-- ============================================================
          HOW IT WORKS

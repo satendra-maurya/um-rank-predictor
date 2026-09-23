@@ -1,11 +1,10 @@
-<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;box-shadow:var(--shadow-sm);">
-    <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
-        <h3 style="font-size:16px;font-weight:700;color:var(--text);">Important Direct Links</h3>
-    </div>
+<div>
+@if($links->isNotEmpty())
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;box-shadow:var(--shadow-sm);">
+        <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <h3 style="font-size:16px;font-weight:700;color:var(--text);">Important Direct Links</h3>
+        </div>
 
-    @if($links->isEmpty())
-        <p style="font-size:13px;color:var(--muted);text-align:center;padding:20px 0;">No links configured.</p>
-    @else
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
             @foreach($links as $link)
                 <a href="{{ $link->url }}" target="_blank" rel="noopener noreferrer"
@@ -26,5 +25,6 @@
                 </a>
             @endforeach
         </div>
-    @endif
+    </div>
+@endif
 </div>

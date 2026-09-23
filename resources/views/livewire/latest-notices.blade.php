@@ -1,17 +1,16 @@
-<div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;box-shadow:var(--shadow-sm);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
-        <div style="display:flex;align-items:center;gap:8px;">
-            <span style="width:9px;height:9px;border-radius:50%;background:var(--danger);display:inline-block;" class="pulse-dot"></span>
-            <h3 style="font-size:16px;font-weight:700;color:var(--text);">Latest Updates &amp; Notices</h3>
+<div>
+@if($notices->isNotEmpty())
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;box-shadow:var(--shadow-sm);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);">
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span style="width:9px;height:9px;border-radius:50%;background:var(--danger);display:inline-block;" class="pulse-dot"></span>
+                <h3 style="font-size:16px;font-weight:700;color:var(--text);">Latest Updates &amp; Notices</h3>
+            </div>
+            <a href="{{ route('notices.index') }}" style="font-size:12px;font-weight:600;color:var(--blue);">
+                View All →
+            </a>
         </div>
-        <a href="{{ route('notices.index') }}" style="font-size:12px;font-weight:600;color:var(--blue);">
-            View All →
-        </a>
-    </div>
 
-    @if($notices->isEmpty())
-        <p style="font-size:13px;color:var(--muted);text-align:center;padding:20px 0;">No official notices published yet.</p>
-    @else
         <div style="display:flex;flex-direction:column;gap:10px;">
             @foreach($notices as $notice)
                 <a href="{{ route('notices.show', $notice->slug ?? $notice->id) }}"
@@ -39,7 +38,6 @@
                 </a>
             @endforeach
         </div>
-    @endif
-
-
+    </div>
+@endif
 </div>

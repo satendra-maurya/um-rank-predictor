@@ -34,23 +34,10 @@ class PredictionService
     {
         $model = PredictionModel::findOrFail($data['prediction_model_id']);
 
-        // 1. Calculate Score
-        $totalQuestions = (int) $data['total_questions'];
-        $correct = (int) $data['correct_answers'];
-        $incorrect = (int) $data['incorrect_answers'];
-
-        $formulaConfig = $model->formula_config ?? [];
-        $totalMarks = (float) $model->total_marks;
-
-        $marksPerQuestion = isset($formulaConfig['marks_per_question'])
-            ? (float) $formulaConfig['marks_per_question']
-            : ($totalQuestions > 0 ? $totalMarks / $totalQuestions : 1.0);
-
-        $negativeMarks = isset($formulaConfig['negative_marks_per_question'])
-            ? (float) $formulaConfig['negative_marks_per_question']
-            : ($marksPerQuestion * ((float) ($model->negative_marking_ratio ?? 0.25)));
-
-        $rawScore = round(($correct * $marksPerQuestion) - ($incorrect * $negativeMarks), 2);
+        // 1. Determine Score (Raw score provided directly from candidate form)
+        $rawScore = isset($data['raw_score'])
+            ? round((float) $data['raw_score'], 2)
+            : round(((int) ($data['correct_answers'] ?? 0) * 2.0) - ((int) ($data['incorrect_answers'] ?? 0) * 0.5), 2);
 
         // 2. Anti-Abuse Risk Evaluation
         $ipHash = hash('sha256', $data['ip_address'] ?? '127.0.0.1');
@@ -72,11 +59,8 @@ class PredictionService
             $riskFactors[] = ['factor' => 'HIGH_VELOCITY_IP', 'weight' => 50, 'details' => ['recent_count' => $recentSubmissionsCount]];
         }
 
-        if ($correct + $incorrect > $totalQuestions) {
-            $riskScore += 50;
-            $trustStatus = SubmissionTrustStatus::REJECTED;
-            $riskFactors[] = ['factor' => 'INVALID_ANSWER_COUNT', 'weight' => 50, 'details' => ['attempted' => $correct + $incorrect, 'total' => $totalQuestions]];
-        }
+        $candidateIdentifier = trim($data['candidate_identifier'] ?? $data['roll_number'] ?? $data['name'] ?? '');
+        $dob = ! empty($data['dob']) ? $data['dob'] : null;
 
         // 3. Create Submission Record
         $submission = CandidateSubmission::create([
@@ -84,10 +68,11 @@ class PredictionService
             'exam_stage_id' => $data['exam_stage_id'],
             'shift_id' => $data['shift_id'] ?? null,
             'category_id' => $data['category_id'] ?? null,
-            'candidate_identifier' => trim($data['name']),
-            'total_attempted' => $correct + $incorrect,
-            'correct_answers' => $correct,
-            'incorrect_answers' => $incorrect,
+            'candidate_identifier' => $candidateIdentifier,
+            'dob' => $dob,
+            'total_attempted' => isset($data['total_attempted']) ? (int) $data['total_attempted'] : null,
+            'correct_answers' => isset($data['correct_answers']) ? (int) $data['correct_answers'] : null,
+            'incorrect_answers' => isset($data['incorrect_answers']) ? (int) $data['incorrect_answers'] : null,
             'raw_score' => $rawScore,
             'normalized_score' => $rawScore,
             'session_token' => $sessionToken,
@@ -156,12 +141,10 @@ class PredictionService
             'percentile' => $percentile,
             'confidence_score' => 95.00,
             'metadata' => [
-                'candidate_name' => trim($data['name']),
+                'candidate_name' => $candidateIdentifier,
                 'gender' => $gender,
                 'predicted_rank_gender' => $rankGender,
                 'total_crowd_samples' => $totalTrustedCount,
-                'marks_per_question' => $marksPerQuestion,
-                'negative_marks_per_question' => $negativeMarks,
             ],
             'calculated_at' => now(),
         ]);

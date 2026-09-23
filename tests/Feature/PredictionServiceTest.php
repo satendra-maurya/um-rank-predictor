@@ -33,11 +33,10 @@ class PredictionServiceTest extends TestCase
             'exam_stage_id' => $stage->id,
             'shift_id' => null,
             'category_id' => $category->id,
-            'name' => 'Top Candidate',
+            'roll_number' => 'ROLL-001',
+            'dob' => '2000-01-01',
             'gender' => 'Male',
-            'total_questions' => 100,
-            'correct_answers' => 80, // 80 * 2 = 160
-            'incorrect_answers' => 10, // 10 * 0.5 = 5 -> Raw score = 155.0
+            'raw_score' => 155.0,
             'ip_address' => '192.168.1.10',
             'user_agent' => 'Mozilla',
             'session_token' => 'token-1',
@@ -45,6 +44,11 @@ class PredictionServiceTest extends TestCase
         ]);
 
         $this->assertEquals(155.0, $result1->candidateSubmission->raw_score);
+        $this->assertEquals('ROLL-001', $result1->candidateSubmission->candidate_identifier);
+        $this->assertEquals('2000-01-01', $result1->candidateSubmission->dob->format('Y-m-d'));
+        $this->assertNull($result1->candidateSubmission->total_attempted);
+        $this->assertNull($result1->candidateSubmission->correct_answers);
+        $this->assertNull($result1->candidateSubmission->incorrect_answers);
         $this->assertEquals(1, $result1->predicted_rank_overall);
         $this->assertEquals(1, $result1->predicted_rank_category);
 
@@ -54,11 +58,10 @@ class PredictionServiceTest extends TestCase
             'exam_stage_id' => $stage->id,
             'shift_id' => null,
             'category_id' => $category->id,
-            'name' => 'Second Candidate',
+            'roll_number' => 'ROLL-002',
+            'dob' => '2001-02-02',
             'gender' => 'Male',
-            'total_questions' => 100,
-            'correct_answers' => 60, // 60 * 2 = 120
-            'incorrect_answers' => 20, // 20 * 0.5 = 10 -> Raw score = 110.0
+            'raw_score' => 110.0,
             'ip_address' => '192.168.1.11',
             'user_agent' => 'Mozilla',
             'session_token' => 'token-2',
@@ -86,11 +89,10 @@ class PredictionServiceTest extends TestCase
                 'exam_stage_id' => $stage->id,
                 'shift_id' => null,
                 'category_id' => $category->id,
-                'name' => 'Repeated Bot '.$i,
+                'roll_number' => 'BOT-'.$i,
+                'dob' => '2000-01-01',
                 'gender' => 'Male',
-                'total_questions' => 100,
-                'correct_answers' => 50,
-                'incorrect_answers' => 50,
+                'raw_score' => 50.0,
                 'ip_address' => '10.0.0.99',
                 'user_agent' => 'BotAgent',
                 'session_token' => 'repeat-token-'.$i,
@@ -104,11 +106,10 @@ class PredictionServiceTest extends TestCase
             'exam_stage_id' => $stage->id,
             'shift_id' => null,
             'category_id' => $category->id,
-            'name' => 'Repeated Bot 6',
+            'roll_number' => 'BOT-6',
+            'dob' => '2000-01-01',
             'gender' => 'Male',
-            'total_questions' => 100,
-            'correct_answers' => 50,
-            'incorrect_answers' => 50,
+            'raw_score' => 50.0,
             'ip_address' => '10.0.0.99',
             'user_agent' => 'BotAgent',
             'session_token' => 'repeat-token-6',
