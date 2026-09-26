@@ -700,12 +700,14 @@ nav.main-nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
 }
 .stepper-nav-crumbs .sep { color: var(--border); }
 .stepper-nav-crumbs .active { font-weight: 600; color: var(--text); }
-.stepper-nav button {
+.stepper-nav-crumbs a { color: var(--blue); text-decoration: none; font-weight: 500; }
+.stepper-nav-crumbs a:hover { text-decoration: underline; }
+.stepper-nav button, .stepper-nav a {
     background: none; border: none;
     font-size: 13px; color: var(--blue); font-weight: 600; cursor: pointer;
     padding: 0;
 }
-.stepper-nav button:hover { text-decoration: underline; }
+.stepper-nav button:hover, .stepper-nav a:hover { text-decoration: underline; }
 
 /* Loading indicator */
 .livewire-loader {

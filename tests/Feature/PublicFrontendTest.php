@@ -175,4 +175,17 @@ class PublicFrontendTest extends TestCase
         $response->assertSee('Latest Updates & Notices');
         $response->assertSee('Important Direct Links');
     }
+
+    public function test_start_over_redirects_to_current_authority_available_exams_page(): void
+    {
+        $this->seed(DatabaseSeeder::class);
+
+        Livewire::test('rank-predictor', [
+            'category' => 'upsssc',
+            'exam' => 'upsssc-pet',
+        ])
+            ->assertSee('/rank-predictor/upsssc/available-exams')
+            ->call('resetPredictor')
+            ->assertRedirect(route('rank-predictor.authority.available-exams', ['authority' => 'upsssc']));
+    }
 }

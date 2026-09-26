@@ -12,8 +12,11 @@
         {{-- Breadcrumb --}}
         @if($step > 1)
             <div class="breadcrumb">
-                <button wire:click="resetPredictor" type="button">Home</button>
-                @if($selectedCategorySlug)
+                <a href="{{ route('home') }}">Home</a>
+                @if($authoritySlug && $authorityName)
+                    <span>/</span>
+                    <a href="{{ route('rank-predictor.authority.available-exams', ['authority' => $authoritySlug]) }}">{{ $authorityName }}</a>
+                @elseif($selectedCategorySlug)
                     <span>/</span>
                     <span>{{ strtoupper($selectedCategorySlug) }}</span>
                 @endif
@@ -74,8 +77,11 @@
         @if($step > 1)
             <div class="stepper-nav">
                 <div class="stepper-nav-crumbs">
-                    <button wire:click="resetPredictor" type="button">Home</button>
-                    @if($selectedCategorySlug)
+                    <a href="{{ route('home') }}">Home</a>
+                    @if($authoritySlug && $authorityName)
+                        <span class="sep">/</span>
+                        <a href="{{ route('rank-predictor.authority.available-exams', ['authority' => $authoritySlug]) }}">{{ $authorityName }}</a>
+                    @elseif($selectedCategorySlug)
                         <span class="sep">/</span>
                         <span>{{ strtoupper($selectedCategorySlug) }}</span>
                     @endif
