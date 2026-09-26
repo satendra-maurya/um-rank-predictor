@@ -24,7 +24,18 @@ class HomeController extends Controller
         $authority = ExamAuthority::where('slug', $authoritySlug)
             ->where('status', '!=', ActiveStatus::INACTIVE)
             ->with(['exams'])
-            ->firstOrFail();
+            ->first();
+
+        if (! $authority) {
+            $authority = ExamAuthority::where('short_name', strtolower($authoritySlug))
+                ->where('status', '!=', ActiveStatus::INACTIVE)
+                ->with(['exams'])
+                ->first();
+        }
+
+        if (! $authority) {
+            abort(404);
+        }
 
         return view('public.available-exams', compact('authority'));
     }

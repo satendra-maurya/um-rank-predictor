@@ -86,11 +86,92 @@ class RankPredictor extends Component
         }
     }
 
+    public function getAuthoritySlug(): ?string
+    {
+        if ($this->selectedExamId) {
+            $exam = Exam::with('examAuthority')->find($this->selectedExamId);
+            if ($exam?->examAuthority) {
+                return $exam->examAuthority->slug;
+            }
+        }
+
+        if ($this->selectedAuthorityId) {
+            $auth = ExamAuthority::find($this->selectedAuthorityId);
+            if ($auth) {
+                return $auth->slug;
+            }
+        }
+
+        if ($this->selectedCategorySlug) {
+            $auth = ExamAuthority::where('slug', $this->selectedCategorySlug)
+                ->orWhere('short_name', strtolower($this->selectedCategorySlug))
+                ->first();
+            if ($auth) {
+                return $auth->slug;
+            }
+            if ($this->selectedCategorySlug === 'railway') {
+                return 'rrb';
+            }
+
+            return $this->selectedCategorySlug;
+        }
+
+        return null;
+    }
+
+    public function getAuthorityName(): ?string
+    {
+        if ($this->selectedExamId) {
+            $exam = Exam::with('examAuthority')->find($this->selectedExamId);
+            if ($exam?->examAuthority) {
+                return $exam->examAuthority->short_name ?: $exam->examAuthority->name;
+            }
+        }
+
+        if ($this->selectedAuthorityId) {
+            $auth = ExamAuthority::find($this->selectedAuthorityId);
+            if ($auth) {
+                return $auth->short_name ?: $auth->name;
+            }
+        }
+
+        if ($this->selectedCategorySlug) {
+            $auth = ExamAuthority::where('slug', $this->selectedCategorySlug)
+                ->orWhere('short_name', strtolower($this->selectedCategorySlug))
+                ->first();
+            if ($auth) {
+                return $auth->short_name ?: $auth->name;
+            }
+            if ($this->selectedCategorySlug === 'ssc') {
+                return 'SSC';
+            }
+            if ($this->selectedCategorySlug === 'railway') {
+                return 'RRB';
+            }
+
+            return strtoupper($this->selectedCategorySlug);
+        }
+
+        return null;
+    }
+
     public function selectCategory(string $categorySlug): void
     {
         $this->selectedCategorySlug = strtolower($categorySlug);
-        $this->selectedStateId = null;
-        $this->selectedAuthorityId = null;
+        $auth = ExamAuthority::where('slug', $this->selectedCategorySlug)
+            ->orWhere('short_name', strtolower($categorySlug))
+            ->first();
+
+        if ($auth) {
+            $this->selectedAuthorityId = $auth->id;
+            if ($auth->state_id) {
+                $this->selectedStateId = $auth->state_id;
+            }
+        } else {
+            $this->selectedStateId = null;
+            $this->selectedAuthorityId = null;
+        }
+
         $this->selectedExamId = null;
         $this->selectedCycleId = null;
         $this->selectedStageId = null;
@@ -178,8 +259,10 @@ class RankPredictor extends Component
         }
     }
 
-    public function resetPredictor(): void
+    public function resetPredictor()
     {
+        $authoritySlug = $this->getAuthoritySlug();
+
         $this->step = 1;
         $this->selectedCategorySlug = null;
         $this->selectedStateId = null;
@@ -191,9 +274,20 @@ class RankPredictor extends Component
         $this->roll_number = '';
         $this->dob = null;
         $this->raw_score = null;
+        $this->category_id = null;
+        $this->gender = 'Male';
+        $this->shift_id = null;
         $this->consent = false;
         $this->predictionResult = null;
         $this->isAnalyzing = false;
+        $this->resetErrorBag();
+        $this->resetValidation();
+
+        if ($authoritySlug) {
+            return redirect()->route('rank-predictor.authority.available-exams', ['authority' => $authoritySlug]);
+        }
+
+        return redirect()->route('home');
     }
 
     public function submitPrediction(PredictionService $service): void
@@ -329,6 +423,8 @@ class RankPredictor extends Component
             'selectedExam' => $selectedExam,
             'selectedCycle' => $selectedCycle,
             'selectedStage' => $selectedStage,
+            'authoritySlug' => $this->getAuthoritySlug(),
+            'authorityName' => $this->getAuthorityName(),
         ]);
     }
 }

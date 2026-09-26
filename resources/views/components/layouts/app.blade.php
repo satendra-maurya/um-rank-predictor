@@ -44,7 +44,7 @@
         {{-- Desktop + mobile nav --}}
         <nav class="main-nav" id="mainNav" :class="{ 'open': open }">
             <a href="{{ route('home') }}"         class="{{ request()->routeIs('home') ? 'active' : '' }}">Home</a>
-            <a href="{{ route('rank-predictor') }}" class="{{ request()->routeIs('rank-predictor*') ? 'active' : '' }}">Exams</a>
+            <!-- <a href="{{ route('rank-predictor') }}" class="{{ request()->routeIs('rank-predictor*') ? 'active' : '' }}">Exams</a> -->
             <a href="{{ route('notices.index') }}" class="{{ request()->routeIs('notices*') ? 'active' : '' }}">Updates</a>
             <a href="{{ route('how-it-works') }}" class="{{ request()->routeIs('how-it-works') ? 'active' : '' }}">How It Works</a>
             <a href="{{ route('about') }}"        class="{{ request()->routeIs('about') ? 'active' : '' }}">About</a>
