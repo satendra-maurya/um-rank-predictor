@@ -9,32 +9,6 @@
 <div class="page-hero">
     <div class="container">
 
-        {{-- Breadcrumb --}}
-        @if($step > 1)
-            <div class="breadcrumb">
-                <a href="{{ route('home') }}">Home</a>
-                @if($authoritySlug && $authorityName)
-                    <span>/</span>
-                    <a href="{{ route('rank-predictor.authority.available-exams', ['authority' => $authoritySlug]) }}">{{ $authorityName }}</a>
-                @elseif($selectedCategorySlug)
-                    <span>/</span>
-                    <span>{{ strtoupper($selectedCategorySlug) }}</span>
-                @endif
-                @if($selectedExam)
-                    <span>/</span>
-                    <span>{{ $selectedExam->short_name ?? $selectedExam->name }}</span>
-                @endif
-                @if($selectedCycle)
-                    <span>/</span>
-                    <span>{{ $selectedCycle->year }}</span>
-                @endif
-                @if($selectedStage)
-                    <span>/</span>
-                    <span>{{ $selectedStage->name }}</span>
-                @endif
-            </div>
-        @endif
-
         {{-- Heading --}}
         @if($step === 1)
             <h1>UM Rank Predictor</h1>
