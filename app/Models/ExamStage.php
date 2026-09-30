@@ -21,6 +21,7 @@ class ExamStage extends Model
         'stage_order',
         'type',
         'description',
+        'ranking_config',
         'status',
     ];
 
@@ -28,6 +29,7 @@ class ExamStage extends Model
     {
         return [
             'stage_order' => 'integer',
+            'ranking_config' => 'array',
             'status' => ActiveStatus::class,
         ];
     }

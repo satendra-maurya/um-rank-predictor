@@ -24,6 +24,7 @@ class ExamStageRequest extends FormRequest
             'duration_minutes' => 'nullable|integer|min:1',
             'negative_marking_ratio' => 'nullable|numeric|min:0|max:1',
             'description' => 'nullable|string',
+            'ranking_config' => 'nullable|json',
             'status' => ['required', Rule::enum(ActiveStatus::class)],
         ];
     }

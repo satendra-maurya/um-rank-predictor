@@ -50,6 +50,7 @@ class ExamStageCrudController extends CrudController
         $this->crud->field('duration_minutes')->label('Duration (Minutes)')->type('number');
         $this->crud->field('negative_marking_ratio')->label('Negative Marking Ratio (e.g. 0.25, 0.33)')->type('number')->attributes(['step' => '0.01']);
         $this->crud->field('description')->label('Description')->type('textarea');
+        $this->crud->field('ranking_config')->label('Ranking Configuration (JSON)')->type('textarea')->hint('Optional JSON object for stage-specific ranking rules and tie-breakers.');
         $this->crud->field('status')->label('Status')->type('enum')->enum_class(ActiveStatus::class)->enum_function('label');
     }
 

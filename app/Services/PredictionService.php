@@ -63,9 +63,10 @@ class PredictionService
         $candidateName = trim($data['candidate_name'] ?? $data['name'] ?? '');
         $candidateIdentifier = trim($data['candidate_identifier'] ?? $data['roll_number'] ?? '');
         $dob = ! empty($data['dob']) ? $data['dob'] : null;
+        $gender = in_array(strtolower($data['gender'] ?? ''), ['male', 'female', 'other']) ? ucfirst(strtolower($data['gender'])) : 'Other';
 
         // 3. Create Submission & Record Consent in Transaction
-        $submission = DB::transaction(function () use ($model, $data, $rawScore, $ipHash, $uaHash, $sessionToken, $deviceFingerprint, $riskScore, $trustStatus, $riskFactors, $candidateName, $candidateIdentifier, $dob) {
+        $submission = DB::transaction(function () use ($model, $data, $rawScore, $ipHash, $uaHash, $sessionToken, $deviceFingerprint, $riskScore, $trustStatus, $riskFactors, $candidateName, $candidateIdentifier, $dob, $gender) {
             // Record Purpose Consent for Rank Prediction
             app(ConsentService::class)->give('rank_prediction', [
                 'user_id' => auth()->id(),
@@ -86,6 +87,7 @@ class PredictionService
                 'candidate_name' => $candidateName ?: null,
                 'candidate_identifier' => $candidateIdentifier,
                 'dob' => $dob,
+                'gender' => $gender,
                 'total_attempted' => isset($data['total_attempted']) ? (int) $data['total_attempted'] : null,
                 'correct_answers' => isset($data['correct_answers']) ? (int) $data['correct_answers'] : null,
                 'incorrect_answers' => isset($data['incorrect_answers']) ? (int) $data['incorrect_answers'] : null,
@@ -113,56 +115,21 @@ class PredictionService
             return $sub;
         });
 
-        // 4. Calculate Ranks against Trusted Dataset for the Exam Stage
-        $trustedBaseQuery = CandidateSubmission::where('exam_stage_id', $data['exam_stage_id'])
-            ->where('trust_status', SubmissionTrustStatus::TRUSTED);
-
-        $totalTrustedCount = (clone $trustedBaseQuery)->count();
-
-        // Overall Rank (number of higher scores + 1)
-        $rankOverall = (clone $trustedBaseQuery)->where('raw_score', '>', $rawScore)->count() + 1;
-
-        // Category Rank
-        $rankCategory = null;
-        if (! empty($data['category_id'])) {
-            $rankCategory = (clone $trustedBaseQuery)
-                ->where('category_id', $data['category_id'])
-                ->where('raw_score', '>', $rawScore)
-                ->count() + 1;
-        }
-
-        // Gender Rank (portable Laravel JSON syntax)
-        $gender = in_array(strtolower($data['gender']), ['male', 'female', 'other']) ? ucfirst(strtolower($data['gender'])) : 'Other';
-
-        $rankGender = PredictionResult::whereHas('candidateSubmission', function ($q) use ($data) {
-            $q->where('exam_stage_id', $data['exam_stage_id'])
-                ->where('trust_status', SubmissionTrustStatus::TRUSTED);
-        })
-            ->where('metadata->gender', $gender)
-            ->whereHas('candidateSubmission', function ($q) use ($rawScore) {
-                $q->where('raw_score', '>', $rawScore);
-            })
-            ->count() + 1;
-
-        // Percentile calculation
-        $percentile = 100.0;
-        if ($totalTrustedCount > 1) {
-            $percentile = round((($totalTrustedCount - $rankOverall + 1) / $totalTrustedCount) * 100, 2);
-            $percentile = min(99.99, max(0.01, $percentile));
-        }
+        // 4. Calculate Ranks via RankingService (Single Source of Truth)
+        $ranking = app(RankingService::class)->calculateForSubmission($submission);
 
         // 5. Store and return Prediction Result
         return PredictionResult::create([
             'candidate_submission_id' => $submission->id,
-            'predicted_rank_overall' => $rankOverall,
-            'predicted_rank_category' => $rankCategory,
-            'percentile' => $percentile,
+            'predicted_rank_overall' => $ranking['overall_rank'],
+            'predicted_rank_category' => $ranking['category_rank'],
+            'percentile' => $ranking['percentile'],
             'confidence_score' => 95.00,
             'metadata' => [
                 'candidate_name' => $candidateName ?: $candidateIdentifier,
                 'gender' => $gender,
-                'predicted_rank_gender' => $rankGender,
-                'total_crowd_samples' => $totalTrustedCount,
+                'predicted_rank_gender' => $ranking['gender_rank'],
+                'total_crowd_samples' => $ranking['total_candidates'],
             ],
             'calculated_at' => now(),
         ]);

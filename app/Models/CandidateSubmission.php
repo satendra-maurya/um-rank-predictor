@@ -24,6 +24,7 @@ class CandidateSubmission extends Model
         'candidate_name',
         'candidate_identifier',
         'dob',
+        'gender',
         'total_attempted',
         'correct_answers',
         'incorrect_answers',
